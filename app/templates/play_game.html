@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Question {{ question_number }}</h1>
+    <p>{{ question.question_text }}</p>
+    <form action="{{ url_for('game.answer_question') }}" method="post">
+        <button type="submit" name="answer" value="A">{{ question.option_a }}</button>
+        <button type="submit" name="answer" value="B">{{ question.option_b }}</button>
+        <button type="submit" name="answer" value="C">{{ question.option_c }}</button>
+        <button type="submit" name="answer" value="D">{{ question.option_d }}</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+
+    <a href="{{ url_for('game.dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+</body>
+</html>

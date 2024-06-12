@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Score</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Your Score: {{ score }}</h1>
+    <a href="{{ url_for('game.dashboard') }}">Back to Dashboard</a>
+</body>
+</html>
