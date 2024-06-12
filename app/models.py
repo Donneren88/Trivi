@@ -1,26 +1,23 @@
-from app import db
-from sqlalchemy.schema import UniqueConstraint, ForeignKeyConstraint
+from flask_login import UserMixin
+from . import db
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
+    username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    score = db.Column(db.Integer, nullable=True)
+    score = db.Column(db.Integer, default=0)
 
-    __table_args__ = (
-        UniqueConstraint('username', name='uq_user_username'),
-        UniqueConstraint('email', name='uq_user_email'),
-    )
+    def get_id(self):
+        return str(self.id)
+
+    @property
+    def is_active(self):
+        return True
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True, nullable=False)
-    questions = db.relationship('Question', backref='game', lazy=True)
-
-    __table_args__ = (
-        UniqueConstraint('name', name='uq_game_name'),
-    )
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +28,5 @@ class Question(db.Model):
     option_c = db.Column(db.String(100), nullable=False)
     option_d = db.Column(db.String(100), nullable=False)
     correct_answer = db.Column(db.String(1), nullable=False)
+    game = db.relationship('Game', backref=db.backref('questions', lazy=True))
 
-    __table_args__ = (
-        ForeignKeyConstraint(['game_id'], ['game.id'], name='fk_question_game_id'),
-    )
